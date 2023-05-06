@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Datatypes.fs" />
+    <Compile Include="Config.fs" />
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\status\status.fsproj" />
+  </ItemGroup>
+</Project>
