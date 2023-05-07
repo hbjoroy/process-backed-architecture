@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "api", "api\api.fsproj", "{C15218E1-8108-45E2-9358-52A99F661006}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "payment", "payment\payment.fsproj", "{9139DDCB-BDD9-4B0D-A263-F21F4B1288D7}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "status", "status\status.fsproj", "{5F888DBC-E7AC-4A53-B2B8-92789522315F}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "payment-initiation-process", "payment-initiation-process\payment-initiation-process.fsproj", "{07C188CA-0600-40BB-9833-56CCC813ADE5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C15218E1-8108-45E2-9358-52A99F661006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C15218E1-8108-45E2-9358-52A99F661006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C15218E1-8108-45E2-9358-52A99F661006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C15218E1-8108-45E2-9358-52A99F661006}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9139DDCB-BDD9-4B0D-A263-F21F4B1288D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9139DDCB-BDD9-4B0D-A263-F21F4B1288D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9139DDCB-BDD9-4B0D-A263-F21F4B1288D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9139DDCB-BDD9-4B0D-A263-F21F4B1288D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F888DBC-E7AC-4A53-B2B8-92789522315F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F888DBC-E7AC-4A53-B2B8-92789522315F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F888DBC-E7AC-4A53-B2B8-92789522315F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F888DBC-E7AC-4A53-B2B8-92789522315F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07C188CA-0600-40BB-9833-56CCC813ADE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07C188CA-0600-40BB-9833-56CCC813ADE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07C188CA-0600-40BB-9833-56CCC813ADE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07C188CA-0600-40BB-9833-56CCC813ADE5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
