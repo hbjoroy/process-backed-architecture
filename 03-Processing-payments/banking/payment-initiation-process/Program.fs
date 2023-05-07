@@ -6,40 +6,25 @@ open System
 open System.Text.Json
 
 module Handlers =
-
-    let serialize data =
-        JsonSerializer.Serialize(data)
-        
-    let paymentsTaskHandler (client:IJobClient) (job: IJob) =
+    let paymentsTaskHandler (job: IJob) =
         printfn $"Payments Task Handler {job.Variables}"
-        let nextStatus = {| TransactionStatus = "ACCC" |}
-        client.NewCompleteJobCommand(job.Key)
-            .Variables(serialize nextStatus)
-            .Send()
+        Some {| TransactionStatus = "ACCC" |}
 
-    let bulkPaymentsTaskHandler (client:IJobClient) (job: IJob) =
+    let bulkPaymentsTaskHandler (job: IJob) =
         printfn $"Bulk Payments Task Handler {job.Variables}"
-        let nextStatus = {| TransactionStatus = "ACCC" |}
-        client.NewCompleteJobCommand(job.Key)            
-            .Variables(serialize nextStatus)
-            .Send()
+        Some {| TransactionStatus = "ACCC" |}
 
-    let periodicPaymentsTaskHandler (client:IJobClient) (job: IJob) =
+    let periodicPaymentsTaskHandler (job: IJob) =
         printfn $"Periodic Payments Task Handler {job.Variables}"
-        let nextStatus = {| TransactionStatus = "ACCC" |}
-        client.NewCompleteJobCommand(job.Key)
-            .Variables(serialize nextStatus)
-            .Send()
+        Some {| TransactionStatus = "ACCC" |}
 
-    let invalidPaymentServiceTaskHandler (client:IJobClient) (job: IJob) =
+    let invalidPaymentServiceTaskHandler (job: IJob) =
         printfn $"Invalid Payment Service Task Handler {job.Variables}"
-        let nextStatus = {| TransactionStatus = "RJCT" |}
-        client.NewCompleteJobCommand(job.Key)   
-            .Variables(serialize nextStatus)
-            .Send()
-    let updateStatusTaskHandler (client:IJobClient) (job: IJob) =
+        Some {| TransactionStatus = "RJCT" |}
+
+    let updateStatusTaskHandler (job: IJob) =
         printfn $"Update Status Task Handler {job.Variables}"
-        client.NewCompleteJobCommand(job.Key).Send()
+        None
 
     let handlers = [
         "payments-task", paymentsTaskHandler
@@ -48,31 +33,48 @@ module Handlers =
         "invalid-payment-service-task", invalidPaymentServiceTaskHandler
         "update-status-task", updateStatusTaskHandler
     ]
-module Program =
-    [<EntryPoint>]
-    let main argv =
-        printfn "Payment Initiation Process Workers"
-        let zeebeClient = 
+
+module ZeebeWorker =
+    let mutable storedZeebeClient:IZeebeClient option = None
+
+    let zeebeClient () =
+        match storedZeebeClient with
+        | Some client -> client
+        | None -> failwith "Zeebe Client not initialized"
+
+    let initialize (zeebeConfig:Config.ZeebeConfig) =
+        storedZeebeClient <- Some ( 
             ZeebeClient.Builder()
-                .UseGatewayAddress(Config.zeebeAddress)
+                .UseGatewayAddress(zeebeConfig.ZeebeAddress)
                 .UsePlainText()
-                .Build()
-                
-        zeebeClient.TopologyRequest().Send().Result
+                .Build())
+
+        zeebeClient().TopologyRequest().Send().Result
         |> printfn "Topology: %A" 
 
-        zeebeClient.NewDeployCommand()
-            .AddResourceFile("PaymentInitiationProcess.bpmn")
+        zeebeClient().NewDeployCommand()
+            .AddResourceFile(zeebeConfig.Diagram)
             .Send()
             .Result
         |> fun workflow -> workflow.Processes.[0].Version
         |> printfn "Workflow deployed. Version: %d" 
 
-        Handlers.handlers
+    let handleTask (client:IJobClient) (job:IJob) handler =
+        handler job
+        |> function 
+            | Some variables ->
+                client.NewCompleteJobCommand(job.Key)
+                    .Variables(JsonSerializer.Serialize(variables))
+                    .Send()
+            | None -> client.NewCompleteJobCommand(job.Key).Send()
+        |> ignore
+
+    let startWorkers handlers = 
+        handlers
         |> List.map (fun (jobType, handler) -> 
-            zeebeClient.NewWorker()
+            zeebeClient().NewWorker()
                 .JobType(jobType)
-                .Handler(fun client job -> handler client job |> ignore)
+                .Handler(fun client job -> handleTask client job handler)
                 .MaxJobsActive(5)
                 .Name(jobType)
                 .PollInterval(TimeSpan.FromSeconds(1))
@@ -80,6 +82,16 @@ module Program =
                 .Open() |> ignore
             printfn "Worker for %s started" jobType
         ) |> ignore
+
+module Program =
+    [<EntryPoint>]
+    let main argv =
+        printfn "Payment Initiation Process Workers"
+
+        ZeebeWorker.initialize Config.zeebeConfig
+
+        Handlers.handlers
+        |> ZeebeWorker.startWorkers 
 
         printfn  "Press any key to exit ... "
         Console.ReadKey() |> ignore
