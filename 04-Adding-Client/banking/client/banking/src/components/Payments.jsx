@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PaymentItem from "./PaymentItem.jsx";
 import PaymentForm from "./PaymentForm.jsx";
 
 function fetchData() {
@@ -10,7 +11,7 @@ function fetchData() {
 function PaymentList() {
   const [data, setData] = useState([]);
   const [isPaymentSent, setIsPaymentSent] = useState(false);
-  
+  const [time, setTime] = useState(0);
   useEffect(() => {
     fetchData().then((data) => setData(data));
   }, []);
@@ -23,20 +24,31 @@ function PaymentList() {
       setIsPaymentSent(false);
     }
   }, [isPaymentSent]);
+  
+  function update() {
+    setIsPaymentSent(true);
+  }
+
+  useEffect(() => {    
+    const intervalId = setInterval(update, 1000);
+    return () => {
+      clearInterval(intervalId);
+    };    
+  }, [time]);
 
   const listItems = data.map((item) => (
     <li key={item.paymentID}>
-      {item.paymentRequest.amount} {item.paymentRequest.currency} from{" "}
-      {item.paymentRequest.fromAccount} to {item.paymentRequest.toAccount} status {item.transactionStatus}
+        <PaymentItem item= { item } />
     </li>
   ));
 
   return (
     <div>
       <h1>Payments</h1>
-      <ul>{listItems}</ul>
       <PaymentForm setIsPaymentSent={setIsPaymentSent} />
-      <button onClick={() => setIsPaymentSent(true)}>Update Payments</button>
+      <h3>Sent transactions:</h3>
+      <ul class="transactions">{listItems}</ul>
+      <button className="bankingButton" onClick={() => setIsPaymentSent(true)}>Update Payments</button>
     </div>
   );
 }

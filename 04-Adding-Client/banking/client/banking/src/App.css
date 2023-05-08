@@ -1,6 +1,6 @@
 .App {
-  background-color: #282c34;
-  color: white;
+  background-color: #fcefe5;
+  color: rgb(82, 11, 11);  
 }
 
 .App-logo {
@@ -14,26 +14,66 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.App header {
+    background-color:rgb(82, 11, 11);
+    color:  #facdab;
+    min-height: 5vh;
+    display: flex;
+    flex-direction: column;
+    font-size: calc(10px + 1vmin);    
 }
 
 .App-link {
-  color: #61dafb;
+    background-color: #f39d5c;
+    color: rgb(82, 11, 11);
+  }
+
+.paymentForm {
+    /* background-color: #fcefe5;
+    color: rgb(82, 11, 11);
+    min-height: 5vh; */
+    display: flex;
+    flex-direction: column;
+    font-size: calc(10px + 1vmin);
+    max-width: 700px;
+    margin: 5px;
+    padding: 7px;
+    border: 1px solid rgb(82, 11, 11);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+ul.transactions {
+    list-style-type: none;
+    padding: 5px;
+    font-size: calc(10px + 1vmin);   
+    cursor: pointer;
+}
+ul.transactions li {
+    background-color: #ffddc4;
+    color: rgb(82, 11, 11);
+    border-bottom: 1px solid #130404;
+}
+ul.transactions li:hover {
+    background-color: rgb(82, 11, 11);
+    color: #ffddc4;
+    border-bottom: 1px solid #130404;
+}
+
+.bankingButton {
+    background-color: #f39d5c;
+    color: rgb(82, 11, 11);
+    border: 1px solid #130404;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: calc(10px + 1vmin);
+    margin: 5px;
+    min-width: 250px;
+    cursor: pointer;
+}
+
+.account {
+    font-weight: bolder;
+}
+
+.accountOwner {
+    font-weight: bolder;
 }

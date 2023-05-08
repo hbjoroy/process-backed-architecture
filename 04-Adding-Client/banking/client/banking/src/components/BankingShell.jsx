@@ -3,7 +3,7 @@ import Payments from './Payments.jsx';
 export default () => 
     <div>
         <header>
-            <h1>Banking Shell</h1>
+            <h1>Banking</h1>
         </header>
         <Payments />
     </div>
