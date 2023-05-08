@@ -47,8 +47,8 @@ function PaymentList() {
       <h1>Payments</h1>
       <PaymentForm setIsPaymentSent={setIsPaymentSent} />
       <h3>Sent transactions:</h3>
-      <ul class="transactions">{listItems}</ul>
-      <button className="bankingButton" onClick={() => setIsPaymentSent(true)}>Update Payments</button>
+      <ul className="transactions">{listItems}</ul>
+      {/* <button className="bankingButton" onClick={() => setIsPaymentSent(true)}>Update Payments</button> */}
     </div>
   );
 }
