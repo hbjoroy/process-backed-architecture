@@ -19,5 +19,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\status\status.fsproj" />
+    <ProjectReference Include="..\payment\payment.fsproj" />
   </ItemGroup>
 </Project>

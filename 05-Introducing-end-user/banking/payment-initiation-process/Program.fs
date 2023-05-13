@@ -5,23 +5,62 @@ open Zeebe.Client.Api.Responses
 open System
 open System.Text.Json
 open MongoDB.Driver
+open payment
+module ProcessSupport =
+    let paymentVariables (variables:string) =
+        variables
+        |> JsonDocument.Parse
+        |> fun json -> 
+            json.RootElement.GetProperty("PaymentService").GetString(),
+            json.RootElement.GetProperty("PaymentProduct").GetString(),
+            json.RootElement.GetProperty("PaymentId").GetString()
 
 module Handlers =
     let paymentsTaskHandler (job: IJob) =
         printfn $"Payments Task Handler {job.Variables}"
-        Some {| TransactionStatus = "ACCC" |}
+        Some {| TransactionStatus = "ACCC"; Message=None |}
 
     let bulkPaymentsTaskHandler (job: IJob) =
         printfn $"Bulk Payments Task Handler {job.Variables}"
-        Some {| TransactionStatus = "ACCC" |}
+        Some {| TransactionStatus = "ACCC"; Message=None |}
 
     let periodicPaymentsTaskHandler (job: IJob) =
         printfn $"Periodic Payments Task Handler {job.Variables}"
-        Some {| TransactionStatus = "ACCC" |}
+        Some {| TransactionStatus = "ACCC"; Message=None |}
 
     let invalidPaymentServiceTaskHandler (job: IJob) =
         printfn $"Invalid Payment Service Task Handler {job.Variables}"
-        Some {| TransactionStatus = "RJCT" |}
+        Some {| TransactionStatus = "RJCT"; Message=None |}
+    let verifyOrder (job:IJob) = 
+        printf $"Verify Order {job.Variables}"
+        let paymentService, paymentProduct, paymentId = 
+            job.Variables
+            |> ProcessSupport.paymentVariables
+
+//        let request = services.getPaymentInformationRequest paymentService paymentProduct paymentId
+            
+        let serviceOk = 
+            match paymentService with
+            | "payments" -> Ok None
+            | "bulk-payments" -> Ok None
+            | "periodic-payments" -> Ok None
+            | _ -> Error (Some "Payment serivce not supported, must be one of payments, bulk-payments, periodic-payments")
+
+        let productOk = 
+            match paymentProduct with
+            | "norwegian-domestic-credit-transfer" -> Ok None
+            | _ -> Error (Some "Payment product not supported, must be norwegian-domestic-credit-transfer")
+
+        match serviceOk, productOk with
+        | Ok _, Ok _ -> 
+            Some {| TransactionStatus = "ACTC"; Message = None |}
+        | Error (Some service), Error (Some product) -> 
+            Some {| TransactionStatus = "RJCT"; Message = Some $"{service} {product}" |}
+        | Error (Some e), _ -> 
+            Some {| TransactionStatus = "RJCT"; Message = Some e |}
+        | _, Error (Some e) ->
+            Some {| TransactionStatus = "RJCT"; Message = Some e |}
+        | _ -> Some {| TransactionStatus = "RJCT"; Message = Some "Unknown error" |}
 
     let updateStatusTaskHandler (job: IJob) =
         printfn $"Update Status Task Handler {job.Variables}"
@@ -34,7 +73,7 @@ module Handlers =
 
         status.services.updatePaymentInitiationStatus paymentId transactionStatus |> ignore
         
-        None
+        None 
 
     let handlers = [
         "payments-task", paymentsTaskHandler
@@ -42,6 +81,7 @@ module Handlers =
         "periodic-payments-task", periodicPaymentsTaskHandler
         "invalid-payment-service-task", invalidPaymentServiceTaskHandler
         "update-status-task", updateStatusTaskHandler
+        "verify-order", verifyOrder
     ]
 
 module ZeebeWorker =
