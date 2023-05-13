@@ -13,13 +13,18 @@ function PaymentList() {
   const [isPaymentSent, setIsPaymentSent] = useState(false);
   const [time, setTime] = useState(0);
   useEffect(() => {
-    fetchData().then((data) => setData(data));
+    fetchData()
+        .then((data) => setData(data))
+        .catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
     if (isPaymentSent) {
       // Fetch the updated list of payments
-      fetchData().then((data) => setData(data));
+      fetchData()
+        .then((data) => setData(data))
+        .catch((error) => console.error(error));
+;
       // Reset the isPaymentSent state to false
       setIsPaymentSent(false);
     }
