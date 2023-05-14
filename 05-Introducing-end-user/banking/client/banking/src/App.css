@@ -19,8 +19,13 @@
     color:  #facdab;
     min-height: 5vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     font-size: calc(10px + 1vmin);    
+}
+
+.App header .User {
+  margin-left: auto;
+  color: #8f7663;
 }
 
 .App-link {

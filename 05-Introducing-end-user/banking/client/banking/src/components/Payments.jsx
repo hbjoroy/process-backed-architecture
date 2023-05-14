@@ -23,8 +23,7 @@ function PaymentList() {
       // Fetch the updated list of payments
       fetchData()
         .then((data) => setData(data))
-        .catch((error) => console.error(error));
-;
+        .catch((error) => { setData([]); console.error(error) });
       // Reset the isPaymentSent state to false
       setIsPaymentSent(false);
     }
@@ -47,15 +46,26 @@ function PaymentList() {
     </li>
   ));
 
-  return (
-    <div>
-      <h1>Payments</h1>
-      <PaymentForm setIsPaymentSent={setIsPaymentSent} />
-      <h3>Sent transactions:</h3>
-      <ul className="transactions">{listItems}</ul>
-      {/* <button className="bankingButton" onClick={() => setIsPaymentSent(true)}>Update Payments</button> */}
-    </div>
-  );
+  if (data.length === 0) {
+    return (
+      <>
+        <p>No payments loaded</p>
+      </>
+    )
+  }
+  else {
+    return (
+      <>
+        <h1>Payments</h1>
+        <PaymentForm setIsPaymentSent={setIsPaymentSent} />
+          <h3>Sent transactions:</h3>
+          <ul className="transactions">{listItems}</ul>
+         {/* <button className="bankingButton" onClick={() => setIsPaymentSent(true)}>Update Payments</button> */} 
+      
+      </> 
+    );
+
+  }
 }
 
 export default PaymentList;
