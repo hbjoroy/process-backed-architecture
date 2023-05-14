@@ -4,41 +4,41 @@ import PaymentForm from "./PaymentForm.jsx";
 
 function fetchData() {
   return fetch("/api/payments")
-    .then((response) => response.json())
-    .catch((error) => console.error(error));
+    .then((response) => response.json());
 }
 
 function PaymentList() {
   const [data, setData] = useState([]);
-  const [isPaymentSent, setIsPaymentSent] = useState(false);
+  const [isPaymentSent, setIsPaymentSent] = useState(true);
   const [time, setTime] = useState(0);
-  useEffect(() => {
-    fetchData()
-        .then((data) => setData(data))
-        .catch((error) => console.error(error));
-  }, []);
 
   useEffect(() => {
     if (isPaymentSent) {
       // Fetch the updated list of payments
       fetchData()
         .then((data) => setData(data))
-        .catch((error) => { setData([]); console.error(error) });
+        .catch((error) => console.error("Anonymous function in useEffect: " + error));
       // Reset the isPaymentSent state to false
       setIsPaymentSent(false);
     }
   }, [isPaymentSent]);
-  
-  function update() {
-    setIsPaymentSent(true);
-  }
 
   useEffect(() => {    
+    function hasUnfinishedPayments() {
+      const finishedStatuses = ["ACCC", "RJCT"];
+      return data.filter((item) => !finishedStatuses.includes(item.transactionStatus)).count>0;
+    }
+      function update() {
+      if (hasUnfinishedPayments())
+        setIsPaymentSent(true); // Force update of payments
+      setTime(time + 1);
+    }
+
     const intervalId = setInterval(update, 1000);
     return () => {
       clearInterval(intervalId);
     };    
-  }, [time]);
+  }, [time, data]);
 
   const listItems = data.map((item) => (
     <li key={item.paymentID}>
