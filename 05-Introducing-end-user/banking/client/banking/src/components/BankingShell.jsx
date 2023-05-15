@@ -27,7 +27,7 @@ export default () =>
                     <div className="Title"><h1>Banking</h1></div>
                     <div className="User">Logged in as {login}</div>
                 </header>
-                <Payments />
+                <Payments login = {login}/>
             </>    
         )
     }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function PaymentForm({ setIsPaymentSent }) {
+function PaymentForm({ login, setIsPaymentSent }) {
   // Define state variables for each input field
   const [amount, setAmount] = useState(0);
   const [currency, setCurrency] = useState("NOK");
@@ -33,6 +33,7 @@ function PaymentForm({ setIsPaymentSent }) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-user-id": login
       },
       body: jsonRequest,
     })

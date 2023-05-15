@@ -1,5 +1,6 @@
 namespace BankingBff.Datatypes
 open MongoDB.Bson.Serialization.Attributes
+open System.Text.Json.Serialization
 
 type DomesticPaymentRequest = 
     {
@@ -31,3 +32,10 @@ type ApiPaymentInitiationResponse =
 
 type ApiPaymentInitiationStatusResponse =
     {   TransactionStatus: string }
+
+type Profile = 
+    {   [<BsonId>]
+        UserId: string
+        PsuId: string
+        Name: string        
+        Accounts: string ResizeArray } // Trouble deserializing string list
