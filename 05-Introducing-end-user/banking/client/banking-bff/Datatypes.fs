@@ -15,6 +15,7 @@ type Payment =
     {
         [<BsonId>]
         PaymentID: string
+        UserId: string
         PaymentRequest: DomesticPaymentRequest
         TransactionStatus: string
     }

@@ -73,23 +73,31 @@ module Program =
                 |> function
                     | None -> Results.NotFound()
                     | Some profile -> 
-                        collection.Find(fun _ -> true).ToList()
-                        |> Seq.map (fun payment -> 
-                            if payment.TransactionStatus <> "RJCT" then
-                                let originalStatus = payment.TransactionStatus
-                                let updatedPayment = PaymentApiClient.updatePaymentStatus payment profile.PsuId
+                        query {
+                            for payment in collection.AsQueryable() do
+                            where (payment.UserId = profile.UserId)
+                            select payment
+                        }
+                        |> function
+                            | payments when payments |> Seq.isEmpty
+                                -> Results.NotFound()
+                            | payments -> 
+                                payments
+                                |> Seq.map (fun payment -> 
+                                    if payment.TransactionStatus <> "RJCT" then
+                                        let originalStatus = payment.TransactionStatus
+                                        let updatedPayment = PaymentApiClient.updatePaymentStatus payment profile.PsuId
 
-                                if originalStatus <> updatedPayment.TransactionStatus then
-                                    
-                                    let filter = Builders<Datatypes.Payment>.Filter.Eq((fun payment -> payment.PaymentID), payment.PaymentID)
-                                    let update = Builders<Datatypes.Payment>.Update.Set((fun payment -> payment.TransactionStatus), updatedPayment.TransactionStatus)
-                                    collection.UpdateOne(filter, update) |> ignore
-                                
-                                updatedPayment
-                            else
-                                payment)
+                                        if originalStatus <> updatedPayment.TransactionStatus then                                            
+                                            let filter = Builders<Datatypes.Payment>.Filter.Eq((fun payment -> payment.PaymentID), payment.PaymentID)
+                                            let update = Builders<Datatypes.Payment>.Update.Set((fun payment -> payment.TransactionStatus), updatedPayment.TransactionStatus)
+                                            collection.UpdateOne(filter, update) |> ignore
 
-                        |> Results.Ok
+                                        updatedPayment
+                                    else
+                                        payment)
+
+                                |> Results.Ok
 
             )) |> ignore
 
@@ -105,6 +113,7 @@ module Program =
                         let payment = req.ReadFromJsonAsync<Datatypes.DomesticPaymentRequest>().Result
                         let paymentResponse = PaymentApiClient.createPayment payment userProfile.PsuId
                         {   PaymentID = paymentResponse.PaymentId
+                            UserId = userProfile.UserId
                             PaymentRequest = payment 
                             TransactionStatus = paymentResponse.TransactionStatus}
                         |> collection.InsertOne
