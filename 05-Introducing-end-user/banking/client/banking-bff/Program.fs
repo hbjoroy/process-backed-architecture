@@ -51,7 +51,7 @@ module Program =
                 printfn "User: %s" userId
                 ProfileDbClient.getProfile userId
                 |> function
-                    | None -> Results.NotFound()
+                    | None -> Results.Problem( "User profile not found", statusCode = 404)
                     | Some profile -> Results.Ok(profile)
 
             )) |> ignore
@@ -62,7 +62,7 @@ module Program =
                 let collection = db.GetCollection<Datatypes.Profile>("profiles")
                 let profile = req.ReadFromJsonAsync<Datatypes.Profile>().Result
                 collection.InsertOne(profile)
-                Results.Ok()
+                Results.Ok(profile)
             )) |> ignore
         app.MapGet("/payments", Func<HttpRequest, IResult>(fun (req) -> 
                 let client = MongoClient("mongodb://localhost:27017")
@@ -71,7 +71,7 @@ module Program =
                 req.Headers.["x-user-id"].ToString()
                 |> ProfileDbClient.getProfile
                 |> function
-                    | None -> Results.NotFound()
+                    | None -> Results.Problem( "Profile not found", statusCode = 404) 
                     | Some profile -> 
                         query {
                             for payment in collection.AsQueryable() do
@@ -80,7 +80,7 @@ module Program =
                         }
                         |> function
                             | payments when payments |> Seq.isEmpty
-                                -> Results.NotFound()
+                                -> Results.Problem( "No payments found", statusCode = 404) 
                             | payments -> 
                                 payments
                                 |> Seq.map (fun payment -> 

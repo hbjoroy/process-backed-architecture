@@ -82,3 +82,29 @@ ul.transactions li:hover {
 .accountOwner {
     font-weight: bolder;
 }
+
+.registerForm {
+  box-sizing: border-box;
+  min-width: 300px;
+  max-width: 500px;
+  border: 2px solid rgb(82, 11, 11);
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.registerForm label, .registerForm input {
+  max-width: 200px;
+}
+
+.registerForm div {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.registerButtons {
+  margin-top: 10px;
+  margin-left: auto;
+  max-width: 130px;
+}
