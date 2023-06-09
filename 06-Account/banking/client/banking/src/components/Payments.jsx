@@ -72,6 +72,8 @@ function Payments( {profile} ) {
   if (data.length === 0) {
     return (
       <>
+        <h1>Payments</h1>
+        <PaymentForm login={profile.userId} setIsPaymentSent={setIsPaymentSent} />
         <p>No payments loaded</p>
       </>
     )
