@@ -22,7 +22,7 @@ function Payments( {login} ) {
       // Fetch the updated list of payments
       fetchData(login)
         .then((data) => setData(data))
-        .catch((error) => console.error("Anonymous function in useEffect: " + error));
+        .catch((error) => console.error("Payments component: " + error));
       // Reset the isPaymentSent state to false
       setIsPaymentSent(false);
     }
@@ -55,6 +55,8 @@ function Payments( {login} ) {
   if (data.length === 0) {
     return (
       <>
+        <h1>Payments</h1>
+        <PaymentForm login={login} setIsPaymentSent={setIsPaymentSent} />
         <p>No payments loaded</p>
       </>
     )

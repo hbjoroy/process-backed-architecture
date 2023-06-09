@@ -1,0 +1,20 @@
+### Define file variables
+@baseUrl = http://localhost:5158/v1
+@paymentId = 123456789
+
+### Create a payment request
+POST {{baseUrl}}/payments/norwegian-domestic-credit-transfer HTTP/1.1
+Content-Type: application/json
+
+{
+  "Amount": "100.00",
+  "Currency": "NOK",
+  "FromAccount": "12345678901",
+  "ToAccount": "98765432109",
+  "CreditorName": "Ola Nordmann"
+}
+
+###
+
+# Get the payment status
+GET {{baseUrl}}/payments/norwegian-domestic-credit-transfer/{{paymentId}}/status HTTP/1.1
