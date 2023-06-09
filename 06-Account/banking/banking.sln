@@ -11,6 +11,10 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "status", "status\status.fsp
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "payment-initiation-process", "payment-initiation-process\payment-initiation-process.fsproj", "{07C188CA-0600-40BB-9833-56CCC813ADE5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{D3410154-1275-4F28-B1D3-A5BCD87F40D4}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "banking-bff", "client\banking-bff\banking-bff.fsproj", "{7F2A1A3E-91E3-4B54-A6B9-8C0065F202BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,12 @@ Global
 		{07C188CA-0600-40BB-9833-56CCC813ADE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07C188CA-0600-40BB-9833-56CCC813ADE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07C188CA-0600-40BB-9833-56CCC813ADE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F2A1A3E-91E3-4B54-A6B9-8C0065F202BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F2A1A3E-91E3-4B54-A6B9-8C0065F202BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F2A1A3E-91E3-4B54-A6B9-8C0065F202BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F2A1A3E-91E3-4B54-A6B9-8C0065F202BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7F2A1A3E-91E3-4B54-A6B9-8C0065F202BC} = {D3410154-1275-4F28-B1D3-A5BCD87F40D4}
 	EndGlobalSection
 EndGlobal
